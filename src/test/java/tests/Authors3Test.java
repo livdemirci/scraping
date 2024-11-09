@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AuthorsTest2 extends BaseTest {
+public class Authors3Test extends BaseTest {
     private static WebDriverWait wait;
     @Test
     public void extractAuthors() {
