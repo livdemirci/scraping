@@ -1,7 +1,8 @@
 package tests;
 
 import base.BaseTest;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -11,9 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-public class Authors extends BaseTest {
+public class AuthorsTest extends BaseTest {
     private static WebDriverWait wait;
     @Test
     public void extractAuthors() {

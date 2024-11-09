@@ -1,7 +1,7 @@
 package base;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -12,7 +12,7 @@ public class BaseTest {
     protected WebDriver driver;
     boolean useDebugMode = false; // Debug modunu aktif hale getirin
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         if (driver == null) {
             if (useDebugMode) {
@@ -60,7 +60,7 @@ public class BaseTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         if (driver != null) {
             driver.quit();
