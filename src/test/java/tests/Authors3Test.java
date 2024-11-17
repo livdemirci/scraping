@@ -38,11 +38,11 @@ public class Authors3Test extends BaseTest {
         List<Map.Entry<String, Integer>> sorted = new ArrayList<>(metrics.entrySet());
         sorted.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
 
-        // Tüm yazarları ve sayılarını yazdır
-        System.out.println("All authors:");
-        for (Map.Entry<String, Integer> entry : sorted) {
-            System.out.println(entry.getKey() + ": " + entry.getValue() + " times");
-        }
+//        // Tüm yazarları ve sayılarını yazdır
+//        System.out.println("All authors:");
+//        for (Map.Entry<String, Integer> entry : sorted) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue() + " times");
+//        }
 
         // Toplam yazar sayısını yazdır
         System.out.println("\nTotal number of unique authors: " + metrics.size());
