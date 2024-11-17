@@ -6,19 +6,23 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.io.IOException;
-
 public class BaseTest {
-    protected WebDriver driver;
+
+    // Her thread için bağımsız WebDriver'lar sağlamak için ThreadLocal kullanıyoruz
+    private static ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<>();
+
     boolean useDebugMode = false; // Debug modunu aktif hale getirin
 
     @BeforeEach
     public void setUp() throws Exception {
-        if (driver == null) {
+        if (threadLocalDriver.get() == null) {
             if (useDebugMode) {
                 connectToChromeDebugMode();
             } else {
-                driver = new ChromeDriver();
+                // WebDriver her thread için ayrı oluşturulacak
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu");
+                threadLocalDriver.set(new ChromeDriver(options));  // WebDriver'ı ThreadLocal'a atıyoruz
             }
         }
     }
@@ -26,7 +30,7 @@ public class BaseTest {
     public void connectToChromeDebugMode() throws InterruptedException {
         try {
             // Eğer driver zaten mevcutsa, sadece mevcut oturuma bağlan
-            if (driver != null) {
+            if (threadLocalDriver.get() != null) {
                 return;
             }
 
@@ -53,18 +57,24 @@ public class BaseTest {
             options.setExperimentalOption("debuggerAddress", "127.0.0.1:9222");
 
             // Mevcut Chrome oturumuna bağlan
-            driver = new ChromeDriver(options);
+            threadLocalDriver.set(new ChromeDriver(options));
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @AfterEach
     public void tearDown() {
+        WebDriver driver = threadLocalDriver.get();
         if (driver != null) {
             driver.quit();
-            driver = null; // Bellek sızıntısını önlemek için
+            threadLocalDriver.remove(); // Bellek sızıntısını önlemek için
         }
+    }
+
+    // WebDriver'ı her test için almak için bir getter metodu
+    public WebDriver getDriver() {
+        return threadLocalDriver.get();
     }
 }

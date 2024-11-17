@@ -3,6 +3,7 @@ package tests;
 import base.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -48,6 +49,7 @@ public class Authors2Test extends BaseTest {
     }
 
     private void processPage(String url, List<String> allAuthorNames) {
+        WebDriver driver = getDriver();
         driver.get(url);
 
         try {
