@@ -16,6 +16,7 @@ import java.util.Map;
 public class Authors4Test extends BaseTest {
     private static WebDriverWait wait;
     @Test
+
     public void extractAuthors() {
         List<String> allAuthorNames = new ArrayList<>();
 

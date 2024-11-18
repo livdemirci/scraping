@@ -1,6 +1,7 @@
 package tests;
 
 import base.BaseTest;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class Authors2Test extends BaseTest {
     private static WebDriverWait wait;
     @Test
+    @Tag("firefox")
     public void extractAuthors() {
         List<String> allAuthorNames = new ArrayList<>();
 

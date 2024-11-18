@@ -11,57 +11,48 @@ public class BaseTest {
     // Her thread için bağımsız WebDriver'lar sağlamak için ThreadLocal kullanıyoruz
     private static ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<>();
 
-    boolean useDebugMode = false; // Debug modunu aktif hale getirin
+    // ConfigReader sınıfını kullanarak tarayıcı ve debug modunu alacağız
+    private String browser = ConfigReader.getBrowser();  // Tarayıcı tipi (chrome/firefox vb.)
+    private boolean useDebugMode = ConfigReader.useRemoteDebugging();  // Debug modunu al
 
     @BeforeEach
     public void setUp() throws Exception {
         if (threadLocalDriver.get() == null) {
-            if (useDebugMode) {
-                connectToChromeDebugMode();
-            } else {
-                // WebDriver her thread için ayrı oluşturulacak
-                ChromeOptions options = new ChromeOptions();
-                options.addArguments("--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu");
-                threadLocalDriver.set(new ChromeDriver(options));  // WebDriver'ı ThreadLocal'a atıyoruz
-            }
+            initializeDriver();
         }
     }
 
-    public void connectToChromeDebugMode() throws InterruptedException {
-        try {
-            // Eğer driver zaten mevcutsa, sadece mevcut oturuma bağlan
-            if (threadLocalDriver.get() != null) {
-                return;
-            }
-
-            // Mevcut Chrome oturumunu başlatmak için
-            String command = "cmd.exe /c start \"\" \"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" " +
-                    "--remote-debugging-port=9222 " +
-                    "--user-data-dir=C:\\Temp\\ChromeProfile " +
-                    "--disk-cache-dir=null " +
-                    "--overscroll-history-navigation=0 " +
-                    "--disable-web-security";
-
-            ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", command);
-            processBuilder.redirectErrorStream(true);
-
-            Process process = processBuilder.start();
-
-            Thread.sleep(3000); // Chrome'un başlatılması için zaman tanıyın
-
-            System.out.println("Process completed");
-
-            Thread.sleep(5000); // Mevcut oturuma bağlanmak için zaman tanıyın
-
-            ChromeOptions options = new ChromeOptions();
-            options.setExperimentalOption("debuggerAddress", "127.0.0.1:9222");
-
-            // Mevcut Chrome oturumuna bağlan
-            threadLocalDriver.set(new ChromeDriver(options));
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    private void initializeDriver() {
+        // Tarayıcı tipine göre WebDriver'ı başlatıyoruz
+        switch (browser.toLowerCase()) {
+            case "chrome":
+                threadLocalDriver.set(initializeChromeDriver(useDebugMode));
+                break;
+            case "firefox":
+                // Firefox kullanımı eklenebilir
+                // threadLocalDriver.set(initializeFirefoxDriver());
+                break;
+            default:
+                throw new IllegalArgumentException("Desteklenmeyen tarayıcı: " + browser);
         }
+    }
+
+    private WebDriver initializeChromeDriver(boolean useDebugMode) {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--no-sandbox", "--disable-dev-shm-usage");
+
+        // Eğer debug mode aktifse, gerekli tüm debug argümanlarını ekliyoruz
+        if (useDebugMode) {
+            options.addArguments(
+                    "--remote-debugging-port=9222",       // Remote debugging portu
+                    "--user-data-dir=/tmp/ChromeProfile",  // Kullanıcı profili
+                    "--disk-cache-dir=null",               // Disk cache kapalı
+                    "--overscroll-history-navigation=0",  // Geçmişi engelle
+                    "--disable-web-security"              // Web güvenliği kapalı
+            );
+        }
+
+        return new ChromeDriver(options);
     }
 
     @AfterEach
