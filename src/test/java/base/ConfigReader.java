@@ -18,9 +18,13 @@ public class ConfigReader {
         }
     }
 
-    // Tarayıcı tipini alıyoruz
+    // Tarayıcı tipini alıyoruz (Pipeline'dan gelen ortam değişkenini kontrol et)
     public static String getBrowser() {
-        return properties.getProperty("browser", "chrome");  // chrome varsayılan
+        String browser = System.getenv("BROWSER");  // Pipeline'dan gelen BROWSER ortam değişkeni
+        if (browser == null || browser.isEmpty()) {
+            browser = properties.getProperty("browser");  // Fallback: configuration.properties dosyasından al
+        }
+        return browser;  // chrome varsayılan
     }
 
     // Remote Debugging modunu kontrol ediyoruz

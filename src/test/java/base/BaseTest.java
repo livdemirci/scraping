@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 public class BaseTest {
 
@@ -29,8 +31,7 @@ public class BaseTest {
                 threadLocalDriver.set(initializeChromeDriver(useDebugMode));
                 break;
             case "firefox":
-                // Firefox kullanımı eklenebilir
-                // threadLocalDriver.set(initializeFirefoxDriver());
+                threadLocalDriver.set(initializeFirefoxDriver());
                 break;
             default:
                 throw new IllegalArgumentException("Desteklenmeyen tarayıcı: " + browser);
@@ -53,6 +54,23 @@ public class BaseTest {
         }
 
         return new ChromeDriver(options);
+    }
+
+    private WebDriver initializeFirefoxDriver() {
+        FirefoxOptions options = new FirefoxOptions();
+
+        // Firefox için gerekli ayarları yapıyoruz
+        options.addArguments("--no-sandbox", "--disable-dev-shm-usage");
+
+        // Debug modunda ise gerekli ayarları yapıyoruz
+        if (useDebugMode) {
+            options.addArguments(
+                    "-start-debugger-server",  // Firefox remote debugging için başlatma
+                    "--remote-debugging-port=9222"  // Debugging portu
+            );
+        }
+
+        return new FirefoxDriver(options);  // FirefoxDriver'ı başlatıyoruz
     }
 
     @AfterEach
