@@ -77,8 +77,8 @@ public class BaseTest {
     public void tearDown() {
         WebDriver driver = threadLocalDriver.get();
         if (driver != null) {
-//            driver.quit();
-//            threadLocalDriver.remove(); // Bellek sızıntısını önlemek için
+            driver.quit();
+            threadLocalDriver.remove(); // Bellek sızıntısını önlemek için
         }
     }
 
