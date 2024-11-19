@@ -45,7 +45,7 @@ public class BaseTest {
         // Eğer debug mode aktifse, gerekli tüm debug argümanlarını ekliyoruz
         if (useDebugMode) {
             options.addArguments(
-                    "--remote-debugging-port=9222",       // Remote debugging portu
+                    "--remote-debugging-port=9223",       // Remote debugging portu
                     "--user-data-dir=/tmp/ChromeProfile",  // Kullanıcı profili
                     "--disk-cache-dir=null",               // Disk cache kapalı
                     "--overscroll-history-navigation=0",  // Geçmişi engelle

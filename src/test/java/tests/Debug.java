@@ -12,10 +12,13 @@ public class Debug extends BaseTest {
     public void debug() throws InterruptedException {
         WebDriver driver = getDriver();
 //        WebElement element = driver.findElement(By.xpath("//*[@class=\"flex-1 truncate shrink-0\"]/..//*[@class=\"object-contain w-12 h-12 overflow-hidden pointer-events-none\"]"));
-        WebElement element2 = driver.findElement(By.xpath("//div[text()='Abonelik Ekle']/.."));
-//        textarea.sendKeys("alican");
-    element2.click();
+//        WebElement element2 = driver.findElement(By.xpath("//div[text()='Abonelik Ekle']/.."));
+////        textarea.sendKeys("alican");
+//    element2.click();
+        WebElement element = driver.findElement(By.xpath("//*[@type=\"search\"]"));
+        element.sendKeys("Telefon");
 
+//        driver.navigate().forward();
         Thread.sleep(3000);
     }
 }
